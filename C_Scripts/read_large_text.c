@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        fprintf(stderr, "Usage: %s filename\n", argv[1]);
+        fprintf(stderr, "Usage: %s filename\n", argv[0]);
         exit(2);
     }
 
@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
     words[0] = &contents[0];
     int word = 1;
 
+    //because each line with one word
     for (int i = 0; i < size; i++)
     {
         if (contents[i] == '\n')
@@ -73,6 +74,5 @@ int main(int argc, char *argv[])
     {
         printf("%d %s\n", i, words[i]);
     }
-    
-    
+
 }
