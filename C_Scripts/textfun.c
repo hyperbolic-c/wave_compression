@@ -1,59 +1,23 @@
-/*
- * count the number of each word
- * successfully get the char and its frequency
- */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#define WORD_MAX_SIZE 100
+#include "textfun.h"
+
 
 /* 词频字典结构体 */
-typedef struct word_dict
+/* typedef struct word_dict
 {
-    char word[WORD_MAX_SIZE]; /* 假设单词长度最长为100 */
-    int times;                /* 在一篇文章出现次数不超过 2^31 - 1次 */
-} WORD_DICT;
+    char word[WORD_MAX_SIZE]; //假设单词长度最长为100
+    int times;                //在一篇文章出现次数不超过 2^31 - 1次
+} WORD_DICT; */
 
-typedef struct char_dict
+/* 字符字典结构体 */
+/* typedef struct char_dict
 {
     char letter;
     long int times;
-} CHAR_DICT;
-
-
-int cmp_dict(const void *a, const void *b);
-int cmp_fre_up(const void *a, const void *b);
-int cmp_fre_down(const void *a, const void *b);
-void create_word_fre_dict(char *paragraph);
-
-//void cal_charnums(char *filename);
-void cal_charnums(char *filename, CHAR_DICT *char_list);
-
-int main(int argc, char *argv[])
-{
-    /* in the vcd.txt, the signal and the identifier of the signal are unique
-     * consider how to encode
-     */
-    /* char para[] = {"Youth means a temperamental predominance of courage over timidity \
-                        of the appetite for adventure over the love of ease This often \
-                        aaa bbbb cccc bbbb aaa cccc  fff"}; */
-    // printf("%s\n", para);
-    //create_word_fre_dict(para);
-    if (argc == 1)
-    {
-        fprintf(stderr, "You must supply a filename to read\n");
-        exit(1);
-    }
-    CHAR_DICT char_list[94] = {0};
-    // all inittial 0
-    memset(char_list, 0, 94 * sizeof(CHAR_DICT));
-
-    //get each char anf its frequency
-    cal_charnums(argv[1], char_list);
-
-    return 0;
-}
+} CHAR_DICT; */
 
 /* 按字典序排序 */
 int cmp_dict(const void *a, const void *b)
@@ -82,6 +46,7 @@ int cmp_fre_down(const void *a, const void *b)
     return (pb->times - pa->times);
 }
 
+/* 计算单词的个数 */
 void create_word_fre_dict(char *paragraph)
 {
     /* consider to add dynamic attend */
@@ -174,7 +139,7 @@ void create_word_fre_dict(char *paragraph)
     }
 }
 
-// CHAR ascending sort
+/* 字符升序排序 */
 int char_comp(const void *a, const void *b)
 {
     CHAR_DICT *pa = (CHAR_DICT *)a;
@@ -183,11 +148,11 @@ int char_comp(const void *a, const void *b)
     return (pa->times - pb->times);
 }
 
-void cal_charnums(char *filename, CHAR_DICT *char_list)
+/* /* 计算字符个数 */
+void cal_char_nums(char *filename, CHAR_DICT *char_list)
 {
     FILE *fp;
     fp = fopen(filename, "r");
-    //char buffer[256];
     if (!fp)
     {
         fprintf(stderr, "can not open %s for reading\n", filename);
@@ -195,7 +160,7 @@ void cal_charnums(char *filename, CHAR_DICT *char_list)
         //return NULL;
     }
     // all ASCII code 128
-    // char ASCII from 33 to 126 total94
+    // char ASCII from 33 to 126 total 94
     //CHAR_DICT char_list[94] = {0};
     // all inittial 0
     //memset(char_list, 0, 94 * sizeof(CHAR_DICT));
@@ -204,15 +169,12 @@ void cal_charnums(char *filename, CHAR_DICT *char_list)
     while ((ch = getc(fp)) != EOF)
     {
         int index = (int) ch;
-        //strcpy(char_list[index].letter, ch);
         if (32 < index && index < 127)
         {
             //printf("%d", ch);
             char_list[index - 33].letter = ch;
             char_list[index - 33].times++;
         }    
-        //char_list[ch - 33].letter = ch;
-        //char_list[ch - 33].times++;
     }
 
     qsort(char_list, 94, sizeof(CHAR_DICT), char_comp);
