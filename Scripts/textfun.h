@@ -1,6 +1,8 @@
 /* 
  * text file operate function
  */
+#pragma once
+
 #ifndef __TEXTFUN_H__
 #define __TEXTFUN_H__
 
@@ -37,7 +39,8 @@ int char_comp(const void *a, const void *b);
 /* 计算字符个数 */
 void cal_char_nums(char *filename, CHAR_DICT *char_list);
 
-
+/* extract a part of the text */
+int Search_in_File(char *fname, char *str);
 
 
 #endif
