@@ -3,8 +3,8 @@
  */
 #pragma once
 
-#ifndef __TEXTFUN_H__
-#define __TEXTFUN_H__
+#ifndef __OPERATE_TEXT_H__
+#define __OPERATE_TEXT_H__
 
 #define WORD_MAX_SIZE 100
 

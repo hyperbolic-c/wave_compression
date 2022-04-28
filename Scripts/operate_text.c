@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "textfun.h"
+#include "operate_text.h"
 
 
 /* 词频字典结构体 */
