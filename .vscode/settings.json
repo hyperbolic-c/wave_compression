@@ -2,6 +2,8 @@
     "files.associations": {
         "string.h": "c",
         "HUFF.C": "cpp",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "iostream": "c",
+        "xstring": "cpp"
     }
 }
