@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
         allTxtStr += '\t'; //这个是用来分割的
     }
     fin.close();
-    cout << allTxtStr << endl;
+    //cout << allTxtStr << endl;
 
     cout << "正在编码..." << endl;
     vector<encodeinfo> res = LZW_encode(allTxtStr, 128);
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
     //string codefile = "lzw_code.txt";
     fo = fopen("lzw_code.txt", "w");
     
-    for (int i = 1; i < res.size(); i++)
+    for (int i = 0; i < res.size(); i++)
     {
         //pW = cW;
         //cW = code[i].index;

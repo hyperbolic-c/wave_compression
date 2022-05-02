@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <sys/stat.h>
 using namespace std;
 
 vector<int> encoding(string s1);
@@ -6,7 +7,7 @@ void decoding(vector<int> op);
 
 int main(int argc, char *argv[])
 {
-	/* struct stat status;
+	struct stat status;
     //int ret = stat(filename, &status);
     int ret = stat(argv[1], &status);
     if (ret == -1)
@@ -21,10 +22,23 @@ int main(int argc, char *argv[])
     cout << "the size of the file is " << file_size << " Byte" << endl;
 
 	FILE *fp;
-	fp = fopen(argv[1], "r"); */
+	fp = fopen(argv[1], "r");
+	char *contents = (char *)malloc(file_size);
+
+    // read entire file in all at once
+    fread(contents, file_size, 1, fp);
+    fclose(fp);
 
 
-	string s = "WYS*WYGWYS*WYSWYSG";
+	//string s = "WYS*WYGWYS*WYSWYSG";
+	// FILE *fp;
+	// fp = fopen(argv[1], "r");
+	string s;
+	for (int i = 0; i < file_size; i++)
+    {
+		s+=contents[i];
+	}
+	
 	vector<int> output_code = encoding(s);
 	cout << "Output Codes are: ";
 	for (int i = 0; i < output_code.size(); i++)
