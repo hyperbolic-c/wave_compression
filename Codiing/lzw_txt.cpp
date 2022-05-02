@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
     if (!fin.is_open())
     {
 		cout << "file open failed" << endl;
-		return;
+		//return;
 	}
 
     //read the string
