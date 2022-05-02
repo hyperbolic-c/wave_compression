@@ -158,7 +158,6 @@ int main(int argc, char *argv[])
     fclose(pFile); */
 
     //get the size of the file
-    
     struct stat status;
     //int ret = stat(filename, &status);
     int ret = stat(argv[1], &status);
@@ -171,7 +170,7 @@ int main(int argc, char *argv[])
 
     int file_size = status.st_size;
     //printf("size is: %d\n", size);
-    cout << "the size of the file is" << file_size << "Byte" << endl;
+    cout << "the size of the file is " << file_size << " Byte" << endl;
 
     dict.clear();
     revdict.clear();
@@ -200,19 +199,31 @@ int main(int argc, char *argv[])
     while (getline(fin, s))
     {
         allTxtStr += s;
+        cout << allTxtStr << endl;
         allTxtStr += '\t'; //这个是用来分割的
     }
     fin.close();
-    // cout << allTxtStr << endl;
+    cout << allTxtStr << endl;
 
     cout << "正在编码..." << endl;
     vector<encodeinfo> res = LZW_encode(allTxtStr, 128);
     cout << "编码后码字长度: " << res.size() << endl;
 
-    double ratio = (double)file_size / (4 * res.size());
+    double ratio = (double)file_size / (4 * res.size());  //int is 4 byte
     printf("压缩比为：%10.3f\n", ratio);
 
     //save the encode result
+    FILE *fo;
+    //string codefile = "lzw_code.txt";
+    fo = fopen("lzw_code.txt", "w");
+    
+    for (int i = 1; i < res.size(); i++)
+    {
+        //pW = cW;
+        //cW = code[i].index;
+        fprintf(fo, "%d\n", res[i].index);
+    }
+    fclose(fo);
 
     cout << "正在解码..." << endl;
     string result = LZW_decode(res, 128); // result存储的是编码后的结果

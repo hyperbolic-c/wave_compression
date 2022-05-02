@@ -1,0 +1,2 @@
+In this approach, the contents of the file are read one character at a time until we reach the end of the file.
+When we reach the end of the file fgets() can

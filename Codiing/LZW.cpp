@@ -4,8 +4,25 @@ using namespace std;
 vector<int> encoding(string s1);
 void decoding(vector<int> op);
 
-int main()
+int main(int argc, char *argv[])
 {
+	/* struct stat status;
+    //int ret = stat(filename, &status);
+    int ret = stat(argv[1], &status);
+    if (ret == -1)
+    {
+        fprintf(stderr, "can not stat %s: ", argv[1]);
+        perror(NULL);
+        exit(1);
+    }
+
+    int file_size = status.st_size;
+    //printf("size is: %d\n", size);
+    cout << "the size of the file is " << file_size << " Byte" << endl;
+
+	FILE *fp;
+	fp = fopen(argv[1], "r"); */
+
 
 	string s = "WYS*WYGWYS*WYSWYSG";
 	vector<int> output_code = encoding(s);
