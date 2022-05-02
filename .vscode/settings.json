@@ -4,6 +4,8 @@
         "HUFF.C": "cpp",
         "stdio.h": "c",
         "iostream": "c",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "map": "cpp",
+        "iosfwd": "cpp"
     }
 }

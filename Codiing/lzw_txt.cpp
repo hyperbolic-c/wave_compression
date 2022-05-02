@@ -6,10 +6,13 @@
 #include <vector>
 #include <fstream>
 
+#include <sys/stat.h>
+
 using namespace std;
 
 map<string, int> dict;
 map<int, string> revdict;
+
 struct encodeinfo
 {
     string P;
@@ -98,7 +101,7 @@ string LZW_decode(vector<encodeinfo> code, int beginnum)
     }
     return ret;
 }
-int main()
+int main(int argc, char *argv[])
 {
 
     /*
@@ -131,11 +134,12 @@ int main()
     }*/
 
     /*
-    通常来说，LZW标准下输入的字符串映射成定长（通常为12位）的码字，在12位，4096种可能的代码中，256个代表单个的字符，剩下的3840给出现的字符串
-    但是从实际的角度，12位4096种码字太少了，根本不够用于编码长的文本，所以我这里面用的是32位定长的（也就是4B,1 int）来进行编码后码字的存储
+     * 通常来说, LZW标准下输入的字符串映射成定长（通常为12位）的码字, 在12位, 4096种可能的代码中，256个代表单个的字符,
+     * 剩下的3840给出现的字符串, 但是从实际的角度, 12位4096种码字太少了,
+     * 根本不够用于编码长的文本, 所以我这里面用的是32位定长的（也就是4B,1 int）来进行编码后码字的存储
     */
 
-    //这是输入为文件的版本
+    /* //这是输入为文件的版本
     cout << "请输出要编码文件名：" << endl;
     string filename;
     cin >> filename;
@@ -151,13 +155,28 @@ int main()
     int nLen = ftell(pFile);     //再用ftell获取文件内指针当前的文件位置。
     //这个位置就是文件大小。
     cout << "文件大小是： " << nLen << " Byte" << endl;
-    fclose(pFile);
+    fclose(pFile); */
+
+    //get the size of the file
+    
+    struct stat status;
+    //int ret = stat(filename, &status);
+    int ret = stat(argv[1], &status);
+    if (ret == -1)
+    {
+        fprintf(stderr, "can not stat %s: ", argv[1]);
+        perror(NULL);
+        exit(1);
+    }
+
+    int file_size = status.st_size;
+    //printf("size is: %d\n", size);
+    cout << "the size of the file is" << file_size << "Byte" << endl;
 
     dict.clear();
     revdict.clear();
 
     //应该首先建立一个包含所有单个字符ASCII码表的字符串表
-
     for (int i = 0; i < 128; i++)
     {
         string s = "t";
@@ -167,8 +186,15 @@ int main()
         revdict[i] = char(i);
     }
 
-    ifstream fin(filename.c_str());
+    ifstream fin;
+    fin.open(argv[1], ios::in);
+    if (!fin.is_open())
+    {
+		cout << "file open failed" << endl;
+		return;
+	}
 
+    //read the string
     string allTxtStr;
     string s;
     while (getline(fin, s))
@@ -183,8 +209,10 @@ int main()
     vector<encodeinfo> res = LZW_encode(allTxtStr, 128);
     cout << "编码后码字长度: " << res.size() << endl;
 
-    double ratio = (double)nLen / (4 * res.size());
+    double ratio = (double)file_size / (4 * res.size());
     printf("压缩比为：%10.3f\n", ratio);
+
+    //save the encode result
 
     cout << "正在解码..." << endl;
     string result = LZW_decode(res, 128); // result存储的是编码后的结果
@@ -204,9 +232,12 @@ int main()
     char *token = NULL;
     char *next_token = NULL;
 
-    ofstream fout(outfname, ios::out);
+    string outfname = "lzw_decode.txt";
+    ofstream fout;
+    fout.open(outfname, ios::out);
 
     // Establish string and get the first token:
+    //split the string with "\t"
     token = strtok_s(string1, seps, &next_token);
 
     // While there are tokens in "string1" or "string2"

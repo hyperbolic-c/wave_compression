@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cstring>
 #include <bits/stdc++.h>
+#include <ctime>
 using namespace std;
 // clock_t start, stop;
 // double duration;
@@ -50,10 +51,12 @@ int main()
     // float denum;
     // denum = bin2float(bins, size);
     // printf("%lf\n", denum);
-    
+    const clock_t begin_t = clock();
     double res;
     res = scaled_encode();
     cout << res << endl;
+    float seconds = float(clock() - begin_t);
+    cout << seconds << endl;
 }
 
 // int float2bin(double denum, int *bins)
