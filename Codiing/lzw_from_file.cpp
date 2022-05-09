@@ -137,11 +137,8 @@ int main(int argc, char *argv[])
     if (!fin.is_open())
     {
 		cout << "file open failed" << endl;
-		//return;
 	}
     
-    //ofstream fout;
-    //fout.open("./lzw_res.txt", ios::out);
     //read the string
     string allTxtStr;
     string s;
@@ -149,18 +146,18 @@ int main(int argc, char *argv[])
     {
         allTxtStr += s;
         //cout << allTxtStr << endl;
-        //allTxtStr += '\t'; //这个是用来分割的
-        allTxtStr += '\n';
+
+        allTxtStr += '\n';  //for split
     }
     fin.close();
     //cout << allTxtStr << endl;
 
-    cout << "正在编码..." << endl;
+    cout << "coding..." << endl;
     vector<encodeinfo> res = LZW_encode(allTxtStr, 128);
-    cout << "编码后码字长度: " << res.size() << endl;
+    cout << "the length after coding: " << res.size() << endl;
 
     double ratio = (double)file_size / (4 * res.size());  //int is 4 byte
-    printf("压缩比为：%10.3f\n", ratio);
+    printf("compression radio ：%10.3f\n", ratio);
 
     //save the encode result
     FILE *fo;
@@ -178,12 +175,13 @@ int main(int argc, char *argv[])
     }
     fclose(fo);
 
-    cout << "正在解码..." << endl;
+    cout << "decoding..." << endl;
     string result = LZW_decode(res, 128); // result存储的是编码后的结果
     // cout << result << endl;
 
-    // string1是待分割的字符
-    char string1[1000000];
+    // 分割要转换为char *
+    int strlen = result.length() + 1;
+    char *string1 = new char [strlen];
     int i;
     // cout << result.length() << endl;
     for (i = 0; i < result.length(); i++)
@@ -192,36 +190,19 @@ int main(int argc, char *argv[])
     }
     string1[i] = '\0';
 
-    //char seps[] = "\t";
-    //char *token = NULL;
-    //char *next_token = NULL;
+    //result = result + '\0';
 
-    //string outfname = "lzw_decode.txt";
-    
     string decodefile = argv[1];
     decodefile = decodefile.insert(decodefile.find(".txt"), "_decode");
     ofstream fout;
     fout.open(decodefile, ios::out);
 
-    // Establish string and get the first token:
-    //split the string with "\t"
-    //token = strtok_s(string1, seps, &next_token);
-
-    // While there are tokens in "string1" or "string2"
-    //while (token != NULL)
-    //{
-        // Get next token:
-        //if (token != NULL)
-        //{
-            //fout << token << endl;
-            //token = strtok_s(NULL, seps, &next_token);
-        //}
-    //}
-
-    //引起行内有制表符时 解码后会换行
-    const char *seps = "\n";
+    //split
+    const char *seps = "\n";  //会导致文件中本来的换行符也被筛选掉
     char *p;
     p = strtok(string1, seps);
+    //p = strtok(result, seps);
+
     while(p)
     {
         fout << p << endl;

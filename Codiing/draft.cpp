@@ -24,6 +24,8 @@ vector<encodeinfo> LZW_encode(string s, int encodenum)
     char C;
     vector<encodeinfo> EncodeResult; //存储编码之后的结果
 
+    //修改 跳过空格的处理
+
     for (int i = 0; i < s.length(); i++)
     {
         C = s[i];
@@ -104,6 +106,59 @@ string LZW_decode(vector<encodeinfo> code, int beginnum)
 int main(int argc, char *argv[])
 {
 
+    /*
+    while (1){
+        cout << endl;
+        cout << "请输入要编码的字符串：" << endl;
+        string s;
+        cin >> s;
+        cout << endl;
+        if (s == "quit"){
+            break;
+        }
+        else{
+            cout << "待编码字符串是：" <<s<< endl;
+            dict.clear();
+            revdict.clear();
+
+            //应该首先建立一个包含所有单个字符ASCII码表的字符串表
+
+            for (int i = 0; i < 128; i++){
+                string s = "t";
+                s[0] = char(i);
+                dict[s] = i;
+                revdict[i] = char(i);
+            }
+            vector<encodeinfo> res = LZW_encode(s, 128);
+            cout << "解码输出字符串：" << LZW_decode(res, 128) << endl;
+            cout << endl;
+        }
+    }*/
+
+    /*
+     * 通常来说, LZW标准下输入的字符串映射成定长（通常为12位）的码字, 在12位, 4096种可能的代码中，256个代表单个的字符,
+     * 剩下的3840给出现的字符串, 但是从实际的角度, 12位4096种码字太少了,
+     * 根本不够用于编码长的文本, 所以我这里面用的是32位定长的（也就是4B,1 int）来进行编码后码字的存储
+    */
+
+    /* //这是输入为文件的版本
+    cout << "请输出要编码文件名：" << endl;
+    string filename;
+    cin >> filename;
+
+    cout << "请输入解码文件的地址： " << endl;
+    string outfname;
+    cin >> outfname;
+
+    FILE *pFile;
+    char *file = (char *)filename.c_str();
+    fopen_s(&pFile, file, "rb"); //获取已打开文件的指针
+    fseek(pFile, 0, SEEK_END);   //先用fseek将文件指针移到文件末尾
+    int nLen = ftell(pFile);     //再用ftell获取文件内指针当前的文件位置。
+    //这个位置就是文件大小。
+    cout << "文件大小是： " << nLen << " Byte" << endl;
+    fclose(pFile); */
+
     //get the size of the file
     struct stat status;
     //int ret = stat(filename, &status);
@@ -139,18 +194,15 @@ int main(int argc, char *argv[])
 		cout << "file open failed" << endl;
 		//return;
 	}
-    
-    //ofstream fout;
-    //fout.open("./lzw_res.txt", ios::out);
+
     //read the string
     string allTxtStr;
     string s;
     while (getline(fin, s))
     {
         allTxtStr += s;
-        //cout << allTxtStr << endl;
-        //allTxtStr += '\t'; //这个是用来分割的
-        allTxtStr += '\n';
+        cout << allTxtStr << endl;
+        allTxtStr += '\t'; //这个是用来分割的
     }
     fin.close();
     //cout << allTxtStr << endl;
@@ -165,10 +217,7 @@ int main(int argc, char *argv[])
     //save the encode result
     FILE *fo;
     //string codefile = "lzw_code.txt";
-    string codefile = argv[1];
-    codefile = codefile.insert(codefile.find(".txt"), "_code");
-    
-    fo = fopen(codefile.c_str(), "w");
+    fo = fopen("lzw_code.txt", "w");
     
     for (int i = 0; i < res.size(); i++)
     {
@@ -192,44 +241,30 @@ int main(int argc, char *argv[])
     }
     string1[i] = '\0';
 
-    //char seps[] = "\t";
-    //char *token = NULL;
-    //char *next_token = NULL;
+    char seps[] = "\t";
+    char *token = NULL;
+    char *next_token = NULL;
 
-    //string outfname = "lzw_decode.txt";
-    
-    string decodefile = argv[1];
-    decodefile = decodefile.insert(decodefile.find(".txt"), "_decode");
+    string outfname = "lzw_decode.txt";
     ofstream fout;
-    fout.open(decodefile, ios::out);
+    fout.open(outfname, ios::out);
 
     // Establish string and get the first token:
     //split the string with "\t"
-    //token = strtok_s(string1, seps, &next_token);
+    token = strtok_s(string1, seps, &next_token);
 
     // While there are tokens in "string1" or "string2"
-    //while (token != NULL)
-    //{
-        // Get next token:
-        //if (token != NULL)
-        //{
-            //fout << token << endl;
-            //token = strtok_s(NULL, seps, &next_token);
-        //}
-    //}
-
-    //引起行内有制表符时 解码后会换行
-    const char *seps = "\n";
-    char *p;
-    p = strtok(string1, seps);
-    while(p)
+    while (token != NULL)
     {
-        fout << p << endl;
-        p = strtok(NULL, seps);
+        // Get next token:
+        if (token != NULL)
+        {
+            fout << token << endl;
+            token = strtok_s(NULL, seps, &next_token);
+        }
     }
-
     fout.close();
 
-    //system("pause");
+    system("pause");
     return 0;
 }
