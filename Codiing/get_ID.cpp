@@ -36,6 +36,80 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+int time_encode(char *filename)
+{
+    //input:encode file(time index)
+    //output:encode file(encode_time index)
+    //restore the difference between time to compress the time info
+    ifstream fin(filename, ios::in);
+    if (!fin.is_open())
+    {
+        cout << "file open failed" << endl;
+    }
+
+    ofstream fout("./time_encode.txt", ios::out);
+
+    string buff;
+    string time_buff;
+    string index_buff;
+    int num = 0;
+    int pre = 0;
+    int cur = 0;
+    while(getline(fin, buff))
+    {
+        time_buff = buff.substr(0, buff.find(' '));
+        index_buff = buff.substr(buff.find(' '));    
+
+        cur = atoi(time_buff.c_str());
+        num = cur - pre;
+        pre = cur;
+        fout << to_string(num) << index_buff <<endl;
+    }
+    //cout << num << endl;
+  
+    fin.close();
+    fout.close();
+    
+    return 0;
+}
+
+int time_decode(char *filename)
+{
+    //input:encode file(encode_time index)
+    //output:encode file(time index)
+    //restore the difference between time to compress the time info
+    ifstream fin(filename, ios::in);
+    if (!fin.is_open())
+    {
+        cout << "file open failed" << endl;
+    }
+
+    ofstream fout("./time_decode.txt", ios::out);
+
+    string buff;
+    string time_buff;
+    string index_buff;
+    int num = 0;
+    int pre = 0;
+    int cur = 0;
+    while(getline(fin, buff))
+    {
+        time_buff = buff.substr(0, buff.find(' '));
+        index_buff = buff.substr(buff.find(' '));    
+
+        cur = atoi(time_buff.c_str());
+        num = cur + pre;
+        pre = cur;
+        fout << to_string(num) << index_buff <<endl;
+    }
+    //cout << num << endl;
+  
+    fin.close();
+    fout.close();
+    
+    return 0;
+}
+
 int ID_decode(char *encodefile, char *codefile)
 {
     ifstream fencode;  //the encode file include time and index
